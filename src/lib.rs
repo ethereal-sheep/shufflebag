@@ -3,19 +3,18 @@
 //! The bag allows for a pseudo random drawing of its elements
 //! by assigning a random float64 value to each value and storing
 //! it in a maximal `BinaryHeap<T>`.
-//! 
+//!
 //! Therefore, `push()` and `pop()` complexities follow those of the
 //! `std::collections::BinaryHeap`.
 #![warn(rust_2018_idioms)]
 
+use rand::{rngs::StdRng, Rng, SeedableRng};
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-use rand::{rngs::StdRng, SeedableRng, Rng};
-
 
 pub struct ShuffleBag<T> {
     bag: BinaryHeap<ShufflePair<T>>,
-    rng: StdRng
+    rng: StdRng,
 }
 
 /// A shuffle bag implementation in `rust`.
@@ -24,8 +23,38 @@ pub struct ShuffleBag<T> {
 /// by assigning a random float64 value to each value and storing
 /// it in a maximal `BinaryHeap<T>`.
 impl<T> ShuffleBag<T> {
+    /// Returns the number of elements in the `ShuffleBag`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use shufflebag::ShuffleBag;
+    /// let mut bag: ShuffleBag<i32> = ShuffleBag::new();
+    ///
+    /// assert_eq!(bag.len(), 0);
+    /// bag.push(1);
+    /// assert_eq!(bag.len(), 1);
+    /// bag.push(1);
+    /// assert_eq!(bag.len(), 2);
+    /// ```
     pub fn len(&self) -> usize {
         self.bag.len()
+    }
+
+    /// Returns `true` if the bag contains no elements.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use shufflebag::ShuffleBag;
+    /// let mut bag: ShuffleBag<i32> = ShuffleBag::new();
+    ///
+    /// assert!(bag.is_empty());
+    /// bag.push(1);
+    /// assert!(!bag.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.bag.is_empty()
     }
 
     /// Creates an empty `ShuffleBag`.
@@ -42,10 +71,10 @@ impl<T> ShuffleBag<T> {
     pub fn new() -> Self {
         Self {
             bag: BinaryHeap::new(),
-            rng: StdRng::from_entropy()
+            rng: StdRng::from_entropy(),
         }
     }
-    
+
     /// Creates a `ShuffleBag` from an array.
     ///
     /// # Example
@@ -57,7 +86,6 @@ impl<T> ShuffleBag<T> {
     /// ```
     #[inline]
     pub fn from<const N: usize>(values: [T; N]) -> Self {
-        
         let mut ret = Self::new();
 
         for value in values {
@@ -68,13 +96,13 @@ impl<T> ShuffleBag<T> {
     }
 
     /// Creates an empty `ShuffleBag` with an StdRng::Seed
-    /// 
+    ///
     /// See [`from_seed`](https://rust-random.github.io/rand/rand/trait.SeedableRng.html#tymethod.from_seed)
     #[inline]
     pub fn with_seed(seed: <StdRng as SeedableRng>::Seed) -> Self {
         Self {
             bag: BinaryHeap::new(),
-            rng: StdRng::from_seed(seed)
+            rng: StdRng::from_seed(seed),
         }
     }
 
@@ -89,7 +117,7 @@ impl<T> ShuffleBag<T> {
     pub fn with_u64(seed: u64) -> Self {
         Self {
             bag: BinaryHeap::new(),
-            rng: StdRng::seed_from_u64(seed)
+            rng: StdRng::seed_from_u64(seed),
         }
     }
 
@@ -130,12 +158,17 @@ impl<T> ShuffleBag<T> {
     }
 }
 
+impl<T> Default for ShuffleBag<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 struct ShufflePair<T>(T, f64);
 
 impl<T> Ord for ShufflePair<T> {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(&other).unwrap()
+        self.partial_cmp(other).unwrap()
     }
 }
 
@@ -160,7 +193,6 @@ mod tests {
 
     #[test]
     fn small_bag() {
-        
         let mut b = ShuffleBag::<i32>::new();
 
         let mut vecs = vec![vec![0; 3]; 3];
@@ -171,23 +203,22 @@ mod tests {
             b.push(0);
             b.push(1);
             b.push(2);
-            
+
             for i in 0..3 {
                 let item = b.pop().unwrap();
                 vecs[i][item as usize] += 1;
             }
         }
+        
         // assert a close to uniform distribution
         for v in &vecs {
             for item in v {
                 assert!(*item < BENCH);
             }
         }
-
     }
     #[test]
     fn large_bag() {
-        
         let mut b = ShuffleBag::<i32>::new();
 
         const ITERATIONS: usize = 10000;
@@ -195,12 +226,11 @@ mod tests {
         const BENCH: usize = ITERATIONS + ITERATIONS / 100usize;
         let mut vecs = vec![vec![0; ITEMS]; ITEMS];
 
-
         for _ in 0..ITERATIONS {
             for i in 0..ITEMS {
                 b.push(i as i32);
             }
-            
+
             for i in 0..ITEMS {
                 let item = b.pop().unwrap();
                 vecs[i][item as usize] += 1;
@@ -215,10 +245,9 @@ mod tests {
             }
             assert!(count < BENCH);
         }
-
-    }#[test]
+    }
+    #[test]
     fn normal_bag() {
-        
         let mut b = ShuffleBag::<i32>::new();
 
         const ITERATIONS: usize = 10000;
@@ -226,14 +255,13 @@ mod tests {
         const _BENCH: usize = ITERATIONS + ITERATIONS / 100usize;
         let mut vecs = vec![vec![0; ITEMS + ITEMS]; ITEMS + ITEMS];
 
-
         for _ in 0..ITERATIONS {
             for i in 0..ITEMS {
                 for j in 0..ITEMS {
                     b.push(i as i32 + j as i32);
                 }
             }
-            
+
             for i in 0..ITEMS + ITEMS {
                 let item = b.pop().unwrap();
                 vecs[i][item as usize] += 1;
@@ -250,6 +278,5 @@ mod tests {
         //     println!();
         //     // assert!(count < BENCH);
         // }
-
     }
 }
