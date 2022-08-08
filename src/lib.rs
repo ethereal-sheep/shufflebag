@@ -206,10 +206,10 @@ mod tests {
 
             for i in 0..3 {
                 let item = b.pop().unwrap();
-                vecs[i][item as usize] += 1;
+                vecs[item as usize][i] += 1;
             }
         }
-        
+
         // assert a close to uniform distribution
         for v in &vecs {
             for item in v {
@@ -233,7 +233,7 @@ mod tests {
 
             for i in 0..ITEMS {
                 let item = b.pop().unwrap();
-                vecs[i][item as usize] += 1;
+                vecs[item as usize][i] += 1;
             }
         }
 
@@ -264,7 +264,7 @@ mod tests {
 
             for i in 0..ITEMS + ITEMS {
                 let item = b.pop().unwrap();
-                vecs[i][item as usize] += 1;
+                vecs[item as usize][i] += 1;
             }
         }
 
