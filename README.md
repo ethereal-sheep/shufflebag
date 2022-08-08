@@ -13,7 +13,7 @@ The bag allows for a pseudo random drawing of its elements
 by assigning a random float64 value to each value and storing
 it in a maximal `BinaryHeap<T>`.
 
-Therefore, `push()` and `pop()` complexities follow those of the
+Therefore, `push` and `pop` complexities follow those of the
 `std::collections::BinaryHeap`.
 
 <!-- cargo-rdme end -->

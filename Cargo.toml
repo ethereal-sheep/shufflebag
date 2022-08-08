@@ -1,6 +1,6 @@
 [package]
 name = "shufflebag"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "A shuffle bag implementation on rust."
 repository = "https://github.com/ethereal-sheep/shufflebag"
