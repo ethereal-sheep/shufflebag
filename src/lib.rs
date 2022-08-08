@@ -93,7 +93,7 @@ impl<T> ShuffleBag<T> {
         }
     }
 
-    /// Pushes an item into the ShuffleBag.
+    /// Pushes an item into the `ShuffleBag`.
     ///
     /// # Example
     ///
@@ -110,7 +110,7 @@ impl<T> ShuffleBag<T> {
         self.bag.push(ShufflePair(value, self.rng.gen()))
     }
 
-    /// Pushes an item into the ShuffleBag.
+    /// Pops an item from the `ShuffleBag`.
     ///
     /// # Example
     ///

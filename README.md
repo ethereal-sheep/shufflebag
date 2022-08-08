@@ -5,6 +5,19 @@
 [![CI](https://github.com/ethereal-sheep/shufflebag/workflows/CI/badge.svg)](https://github.com/ethereal-sheep/shufflebag/actions)
 [![Coverage Status](https://coveralls.io/repos/github/ethereal-sheep/shufflebag/badge.svg?branch=main)](https://coveralls.io/github/ethereal-sheep/shufflebag?branch=main)
 
+<!-- cargo-rdme start -->
+
+A shuffle bag implementation in `rust`.
+
+The bag allows for a pseudo random drawing of its elements
+by assigning a random float64 value to each value and storing
+it in a maximal `BinaryHeap<T>`.
+
+Therefore, `push()` and `pop()` complexities follow those of the
+`std::collections::BinaryHeap`.
+
+<!-- cargo-rdme end -->
+
 ## Installation
 
 ### Cargo
