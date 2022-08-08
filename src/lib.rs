@@ -4,7 +4,7 @@
 //! by assigning a random float64 value to each value and storing
 //! it in a maximal `BinaryHeap<T>`.
 //!
-//! Therefore, `push()` and `pop()` complexities follow those of the
+//! Therefore, `push` and `pop` complexities follow those of the
 //! `std::collections::BinaryHeap`.
 #![warn(rust_2018_idioms)]
 
